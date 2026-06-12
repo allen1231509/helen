@@ -1,0 +1,15 @@
+{
+  "name": "luna-para-helen",
+  "version": "1.0.0",
+  "description": "Luna — asistente personal de estudio, productividad y crecimiento para Helen",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
