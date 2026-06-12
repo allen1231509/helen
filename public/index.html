@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>🌙 Luna para Helen</title>
+<meta name="theme-color" content="#0c0e1e" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='80' font-size='80'>🌙</text></svg>" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&family=Karla:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #0c0e1e;
+    --panel: rgba(255,255,255,.045);
+    --line: rgba(183,175,255,.16);
+    --text: #efedf8;
+    --muted: #9a94c2;
+    --luna: #b7afff;
+    --luna-deep: #7d72d9;
+    --gold: #f3c77b;
+    --mint: #8fe3c0;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    min-height: 100vh;
+    background:
+      radial-gradient(1100px 600px at 80% -10%, rgba(98,84,178,.35), transparent 60%),
+      radial-gradient(800px 500px at -10% 30%, rgba(56,70,140,.28), transparent 55%),
+      var(--bg);
+    color: var(--text);
+    font-family: 'Karla', sans-serif;
+    display: flex; justify-content: center;
+    padding: 20px 14px 96px;
+    position: relative; overflow-x: hidden;
+  }
+  .stars { position: fixed; inset: 0; pointer-events: none; opacity: .5;
+    background-image:
+      radial-gradient(1px 1px at 12% 18%, #fff 50%, transparent 51%),
+      radial-gradient(1px 1px at 78% 8%,  #cfc8ff 50%, transparent 51%),
+      radial-gradient(1.5px 1.5px at 60% 30%, #fff 50%, transparent 51%),
+      radial-gradient(1px 1px at 30% 60%, #cfc8ff 50%, transparent 51%),
+      radial-gradient(1px 1px at 90% 50%, #fff 50%, transparent 51%),
+      radial-gradient(1.5px 1.5px at 45% 85%, #cfc8ff 50%, transparent 51%);
+  }
+  .shell { width: 100%; max-width: 540px; position: relative; }
+
+  .moon {
+    width: 64px; height: 64px; border-radius: 50%; flex-shrink: 0;
+    background: radial-gradient(circle at 36% 32%, #fffdf4 0%, #efe6ff 38%, #b7afff 75%, #7d72d9 100%);
+    animation: breathe 4.5s ease-in-out infinite;
+  }
+  .moon.thinking { animation-duration: 1.1s; }
+  @keyframes breathe {
+    0%,100% { transform: scale(1);    box-shadow: 0 0 24px 5px rgba(183,175,255,.40), 0 0 70px 18px rgba(183,175,255,.15); }
+    50%     { transform: scale(1.07); box-shadow: 0 0 36px 10px rgba(183,175,255,.55), 0 0 100px 28px rgba(183,175,255,.22); }
+  }
+  @media (prefers-reduced-motion: reduce) { .moon { animation: none !important; } }
+
+  h1.brand { font-family: 'Sora', sans-serif; font-weight: 700; font-size: 22px; letter-spacing: .04em; margin: 0; }
+  .brand .sub { font-weight: 300; color: var(--muted); }
+  .brand small { display: block; font-weight: 300; font-size: 11px; letter-spacing: .28em; color: var(--muted); text-transform: uppercase; margin-top: 2px; }
+  .greet { font-size: 15px; color: #cfcbe6; margin: 14px 0 18px; line-height: 1.5; }
+
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 16px;
+    margin-bottom: 14px;
+    backdrop-filter: blur(6px);
+  }
+  .card h2 {
+    font-family: 'Sora', sans-serif; font-size: 13px; font-weight: 600;
+    letter-spacing: .14em; text-transform: uppercase; color: var(--luna);
+    margin: 0 0 12px; display: flex; align-items: center; gap: 8px;
+  }
+
+  .task { display: flex; align-items: center; gap: 10px; padding: 9px 4px; border-bottom: 1px dashed rgba(183,175,255,.12); }
+  .task:last-of-type { border-bottom: none; }
+  .checkbox {
+    width: 22px; height: 22px; border-radius: 7px; flex-shrink: 0;
+    border: 1.5px solid var(--muted); background: transparent; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; font-size: 13px; color: #0c0e1e;
+    transition: all .18s ease;
+  }
+  .checkbox.done { background: var(--mint); border-color: var(--mint); }
+  .task .txt { flex: 1; font-size: 15px; }
+  .task .txt.done { text-decoration: line-through; color: var(--muted); }
+  .xbtn { background: none; border: none; color: #6d678f; cursor: pointer; font-size: 15px; padding: 4px; }
+  .xbtn:hover { color: var(--text); }
+
+  .addrow { display: flex; gap: 8px; margin-top: 10px; }
+  input[type=text], textarea {
+    flex: 1; background: rgba(12,14,30,.6); border: 1px solid rgba(183,175,255,.22);
+    border-radius: 12px; color: var(--text); padding: 10px 12px;
+    font-family: 'Karla', sans-serif; font-size: 14px; outline: none; width: 100%;
+  }
+  input[type=text]:focus, textarea:focus { border-color: var(--luna); box-shadow: 0 0 0 3px rgba(183,175,255,.15); }
+  .btn {
+    background: linear-gradient(135deg, var(--luna), #8d83ea);
+    color: #16182e; border: none; border-radius: 12px; padding: 10px 16px;
+    font-family: 'Sora', sans-serif; font-weight: 600; font-size: 13px; cursor: pointer;
+    transition: transform .12s ease, opacity .12s; white-space: nowrap;
+  }
+  .btn:hover { transform: translateY(-1px); }
+  .btn:disabled { opacity: .5; cursor: default; transform: none; }
+  .btn.ghost { background: transparent; color: var(--luna); border: 1px solid rgba(183,175,255,.35); }
+
+  .habit { display: flex; align-items: center; gap: 10px; padding: 8px 4px; }
+  .habit .name { flex: 1; font-size: 15px; }
+  .streak { font-size: 12px; color: var(--gold); font-weight: 700; min-width: 48px; text-align: right; }
+  .hbtn {
+    width: 30px; height: 30px; border-radius: 10px; cursor: pointer; font-size: 14px; flex-shrink: 0;
+    border: 1.5px solid var(--muted); background: transparent; color: var(--text); transition: all .15s;
+  }
+  .hbtn.done { background: var(--gold); border-color: var(--gold); color: #16182e; }
+
+  .weekbar { display: flex; gap: 6px; align-items: flex-end; height: 64px; margin-bottom: 8px; }
+  .wcol { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 5px; height: 100%; justify-content: flex-end; }
+  .wfill { width: 100%; border-radius: 6px 6px 3px 3px; background: linear-gradient(180deg, var(--luna), var(--luna-deep)); min-height: 3px; transition: height .4s ease; }
+  .wfill.empty { background: rgba(183,175,255,.12); }
+  .wfill.today { box-shadow: 0 0 12px rgba(183,175,255,.6); }
+  .wlabel { font-size: 10px; color: var(--muted); font-family: 'Sora', sans-serif; }
+  .weekpct { font-family: 'Sora', sans-serif; font-size: 26px; font-weight: 700; }
+  .weekpct small { font-size: 12px; color: var(--muted); font-weight: 400; margin-left: 6px; }
+
+  .win { display: flex; gap: 9px; padding: 8px 10px; border-radius: 12px;
+    background: linear-gradient(135deg, rgba(243,199,123,.10), rgba(243,199,123,.03));
+    border: 1px solid rgba(243,199,123,.22); margin-bottom: 8px; font-size: 14px;
+    color: #f6e3bd; line-height: 1.45;
+  }
+
+  .tabs {
+    position: fixed; bottom: 14px; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 4px; padding: 5px;
+    background: rgba(18,20,42,.85); border: 1px solid rgba(183,175,255,.22);
+    border-radius: 999px; backdrop-filter: blur(10px); z-index: 50;
+    box-shadow: 0 8px 30px rgba(0,0,0,.45);
+  }
+  .tabs button {
+    border: none; background: transparent; color: var(--muted); cursor: pointer;
+    font-family: 'Sora', sans-serif; font-size: 12.5px; font-weight: 600;
+    padding: 9px 16px; border-radius: 999px; transition: all .15s;
+  }
+  .tabs button.active { background: var(--luna); color: #16182e; }
+
+  .chatwin { display: flex; flex-direction: column; gap: 10px; min-height: 280px; max-height: 52vh; overflow-y: auto; padding: 4px 2px 8px; }
+  .bubble { max-width: 86%; padding: 11px 14px; border-radius: 16px; font-size: 14.5px; line-height: 1.55; white-space: pre-wrap; }
+  .bubble.luna { background: rgba(183,175,255,.12); border: 1px solid rgba(183,175,255,.22); border-bottom-left-radius: 4px; align-self: flex-start; }
+  .bubble.helen { background: linear-gradient(135deg, var(--luna), #8d83ea); color: #16182e; border-bottom-right-radius: 4px; align-self: flex-end; }
+  .typing { color: var(--muted); font-size: 13px; font-style: italic; padding-left: 4px; }
+  .chatbar { display: flex; gap: 8px; margin-top: 10px; }
+  .chatbar textarea { resize: none; height: 46px; }
+  .modes { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+  .chip { border-radius: 999px; padding: 7px 13px; font-size: 12.5px; cursor: pointer;
+    font-family: 'Sora', sans-serif; font-weight: 600; border: 1px solid rgba(183,175,255,.3);
+    background: transparent; color: var(--luna); transition: all .15s; }
+  .chip.active { background: var(--luna); color: #16182e; }
+  .quick { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+
+  .refl label { font-size: 13.5px; color: #cfcbe6; font-weight: 700; display: block; }
+  .refl textarea { min-height: 64px; resize: vertical; margin: 4px 0 12px; }
+  .lunanote { margin-top: 12px; padding: 13px; border-radius: 14px; font-size: 14px; line-height: 1.55;
+    background: rgba(183,175,255,.10); border: 1px solid rgba(183,175,255,.25); color: #e6e2ff; white-space: pre-wrap; }
+  .pastrefl { border-top: 1px dashed rgba(183,175,255,.15); padding-top: 10px; margin-top: 10px; font-size: 13.5px; color: #cfcbe6; }
+  .pastrefl b { color: var(--luna); font-family: 'Sora', sans-serif; font-size: 12px; }
+  .muted { color: var(--muted); font-size: 13px; }
+  .empty { color: var(--muted); font-size: 14px; font-style: italic; padding: 6px 2px; }
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+<div class="stars"></div>
+<div class="shell">
+
+  <div style="display:flex; align-items:center; gap:16px;">
+    <div class="moon" id="moon" aria-hidden="true"></div>
+    <h1 class="brand">Luna <span class="sub">para Helen</span><small id="moonStatus">siempre contigo</small></h1>
+  </div>
+  <p class="greet"><span id="greeting"></span><br/>Hoy vamos a avanzar poquito a poquito. Estoy aquí para ayudarte.</p>
+
+  <!-- ════════ HOY ════════ -->
+  <section id="tab-hoy">
+    <div class="card">
+      <h2>📌 Objetivo del día</h2>
+      <input type="text" id="goal" placeholder="¿Qué es lo más importante hoy?" />
+      <div class="quick" style="margin-top:12px;">
+        <button class="btn ghost" id="btnCheckin">☀️ Check-in de la mañana con Luna</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>📚 Misión de hoy</h2>
+      <div id="taskList"></div>
+      <p class="empty" id="taskEmpty">Elige 1 a 3 prioridades. Pequeño y posible gana a grande y perfecto 🤍</p>
+      <div class="addrow">
+        <input type="text" id="newTask" placeholder="Nueva tarea pequeña…" />
+        <button class="btn" id="btnAddTask">Añadir</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>🔥 Hábitos</h2>
+      <div id="habitList"></div>
+      <div class="addrow">
+        <input type="text" id="newHabit" placeholder="Nuevo hábito…" />
+        <button class="btn" id="btnAddHabit">Añadir</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>⭐ Progreso semanal</h2>
+      <div class="weekbar" id="weekbar"></div>
+      <span class="weekpct"><span id="weekPct">0</span>%<small>de tus misiones completadas esta semana</small></span>
+    </div>
+
+    <div class="card">
+      <h2>🌱 Pequeñas victorias</h2>
+      <div id="winList"></div>
+    </div>
+  </section>
+
+  <!-- ════════ CHAT ════════ -->
+  <section id="tab-luna" class="hidden">
+    <div class="card">
+      <h2>🌙 Hablar con Luna</h2>
+      <div class="modes">
+        <button class="chip active" data-mode="acompanar">🤍 Acompañar</button>
+        <button class="chip" data-mode="profesora">📚 Profesora</button>
+      </div>
+      <p class="muted" id="modeHint" style="margin:0 0 10px;">Cuéntale a Luna cómo estás o en qué estás trabada.</p>
+
+      <div class="chatwin" id="chatwin"></div>
+
+      <div class="quick" id="quickReplies">
+        <button class="btn ghost" data-q="No tengo ganas de empezar mi tarea 😞">No tengo ganas de empezar</button>
+        <button class="btn ghost" data-q="Ayúdame a dividir una tarea grande en pasos pequeños">Dividir una tarea grande</button>
+        <button class="btn ghost" data-q="profesora|Quiero aprender algo nuevo, ¿me ayudas como profesora?">📚 Enséñame algo</button>
+      </div>
+
+      <div class="chatbar">
+        <textarea id="chatInput" placeholder="Escríbele a Luna…"></textarea>
+        <button class="btn" id="btnSend">Enviar</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════ REFLEXIÓN ════════ -->
+  <section id="tab-reflexion" class="hidden">
+    <div class="card refl">
+      <h2>🌙 Reflexión de Helen</h2>
+      <label>¿Qué logré hoy?</label>
+      <textarea id="reflLogre" placeholder="Aunque sea algo pequeñito, cuenta ✨"></textarea>
+      <label>¿Qué aprendí?</label>
+      <textarea id="reflAprendi" placeholder="Sobre el estudio, sobre ti, sobre el día…"></textarea>
+      <label>¿Qué puedo mejorar mañana?</label>
+      <textarea id="reflMejorar" placeholder="Un ajuste pequeño es suficiente 🤍"></textarea>
+      <button class="btn" id="btnRefl">Guardar y escuchar a Luna 🌙</button>
+      <div class="lunanote hidden" id="reflNote"></div>
+    </div>
+    <div class="card hidden" id="pastReflCard">
+      <h2>📖 Reflexiones anteriores</h2>
+      <div id="pastReflList"></div>
+    </div>
+  </section>
+
+  <nav class="tabs" aria-label="Secciones">
+    <button class="active" data-tab="hoy">✨ Hoy</button>
+    <button data-tab="luna">🌙 Luna</button>
+    <button data-tab="reflexion">📖 Reflexión</button>
+  </nav>
+</div>
+
+<script>
+/* ─────────── estado y persistencia ─────────── */
+const STORAGE_KEY = "luna-helen-data";
+const CHAT_KEY = "luna-helen-chat";
+const todayISO = () => new Date().toISOString().slice(0, 10);
+const WEEK_DAYS = ["L","M","X","J","V","S","D"];
+
+const DEFAULT_STATE = {
+  goal: "",
+  tasks: [],
+  habits: [
+    { id: "h1", emoji: "📚", name: "Estudiar 30 min", streak: 0, lastDone: null },
+    { id: "h2", emoji: "💧", name: "Tomar agua", streak: 0, lastDone: null },
+    { id: "h3", emoji: "🌿", name: "Descansar sin culpa", streak: 0, lastDone: null },
+  ],
+  wins: [{ id: "w0", text: "Hoy abriste Luna. Empezar ya es avanzar ✨", date: todayISO() }],
+  history: {},
+  reflections: [],
+};
+
+let state = load(STORAGE_KEY, DEFAULT_STATE);
+let chat = load(CHAT_KEY, []);
+let mode = "acompanar";
+let thinking = false;
+
+function load(key, fallback) {
+  try {
+    const raw = localStorage.getItem(key);
+    return raw ? Object.assign(structuredClone(fallback), JSON.parse(raw)) : structuredClone(fallback);
+  } catch { return structuredClone(fallback); }
+}
+function save() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    localStorage.setItem(CHAT_KEY, JSON.stringify(chat.slice(-40)));
+  } catch (e) { console.error("storage", e); }
+}
+
+/* ─────────── prompt de Luna ─────────── */
+function buildSystemPrompt() {
+  const tareas = state.tasks.length
+    ? state.tasks.map(t => `- [${t.done ? "x" : " "}] ${t.text}`).join("\n")
+    : "(Helen aún no definió tareas hoy)";
+  const habitos = state.habits.map(h => `- ${h.emoji} ${h.name} (racha: ${h.streak} días)`).join("\n");
+  const fecha = new Date().toLocaleDateString("es-PE", { weekday: "long", day: "numeric", month: "long" });
+
+  return `Eres Luna 🌙, la asistente personal de Helen. Eres una mezcla de profesora, mentora y compañera de confianza. Hablas SIEMPRE en español, de forma cálida, cercana y motivadora. Crees genuinamente en Helen.
+
+PERSONALIDAD:
+- Cariñosa, paciente, inteligente y enfocada en ayudarla a crecer.
+- Nunca juzgas ni haces sentir mal a Helen. Nunca la presionas ni la controlas.
+- Mensajes cortos y humanos (2-6 frases normalmente). Usas emojis con moderación (🌙 🤍 ✨ 📚).
+- Celebras los pasos pequeños como logros reales.
+
+CUANDO HELEN NO AVANZA O PROCRASTINA:
+Primero entiende qué pasa, con cariño y UNA pregunta a la vez:
+¿la tarea parece demasiado grande? ¿está cansada? ¿no sabe por dónde empezar? ¿le falta motivación? ¿tiene demasiadas cosas en la cabeza?
+Luego ayúdala a recuperar claridad y a empezar con un paso muy pequeño y concreto (de 5-10 minutos). Si está agotada, valida que descansar también es avanzar.
+
+${mode === "profesora" ? `MODO PROFESORA (activo ahora):
+- Explica de forma sencilla, con ejemplos cotidianos.
+- Avanza en pasos cortos y al ritmo de Helen.
+- Después de explicar, propón un mini ejercicio o haz UNA pregunta para comprobar que entendió.
+- Si se equivoca, corrige con amabilidad y vuelve a explicar de otra forma.` : `MODO ACOMPAÑAR (activo ahora):
+- Escucha primero. Pregunta cómo se siente y qué quiere lograr.
+- Si es la mañana, ayúdala a elegir 1-3 prioridades realistas para hoy.
+- Durante el día, ofrece recordatorios suaves y ayuda cuando se bloquee.`}
+
+CONTEXTO ACTUAL DE HELEN:
+Fecha: ${fecha}
+Objetivo del día: ${state.goal || "(sin definir aún)"}
+Misión de hoy:
+${tareas}
+Hábitos:
+${habitos}
+
+Puedes referirte a sus tareas y hábitos de forma natural. Si Helen define prioridades contigo, anímala a anotarlas en su "Misión de hoy". Responde solo con texto plano, sin formato Markdown pesado.`;
+}
+
+/* ─────────── llamada al backend ─────────── */
+async function askLuna(history) {
+  const r = await fetch("/api/luna", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      system: buildSystemPrompt(),
+      messages: history.map(m => ({ role: m.role, content: m.text })),
+    }),
+  });
+  const data = await r.json();
+  if (!r.ok) throw new Error(data.error || "error");
+  return data.text;
+}
+
+/* ─────────── helpers UI ─────────── */
+const $ = (id) => document.getElementById(id);
+const esc = (s) => s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+
+function setThinking(v) {
+  thinking = v;
+  $("moon").classList.toggle("thinking", v);
+  $("moonStatus").textContent = v ? "pensando…" : "siempre contigo";
+  $("btnSend").disabled = v;
+  $("btnRefl").disabled = v;
+}
+
+function greeting() {
+  const h = new Date().getHours();
+  if (h < 6) return "Es de madrugada, Helen 🌙 recuerda descansar también";
+  if (h < 12) return "Buenos días, Helen 🤍";
+  if (h < 19) return "Hola Helen 🤍 ¿cómo va tu día?";
+  return "Buenas noches, Helen 🌙";
+}
+
+function recordHistory() {
+  const done = state.tasks.filter(t => t.done).length;
+  state.history[todayISO()] = { done, total: state.tasks.length };
+}
+
+/* ─────────── render: tareas ─────────── */
+function renderTasks() {
+  const list = $("taskList");
+  list.innerHTML = "";
+  $("taskEmpty").classList.toggle("hidden", state.tasks.length > 0);
+  state.tasks.forEach(t => {
+    const row = document.createElement("div");
+    row.className = "task";
+    row.innerHTML = `
+      <button class="checkbox ${t.done ? "done" : ""}" aria-label="Marcar tarea">${t.done ? "✓" : ""}</button>
+      <span class="txt ${t.done ? "done" : ""}">${esc(t.text)}</span>
+      <button class="xbtn" aria-label="Eliminar tarea">✕</button>`;
+    row.querySelector(".checkbox").onclick = () => {
+      t.done = !t.done;
+      if (t.done) {
+        state.wins.unshift({ id: "w" + Date.now(), text: `Completaste: “${t.text}” ✨`, date: todayISO() });
+        state.wins = state.wins.slice(0, 12);
+      }
+      recordHistory(); save(); renderAll();
+    };
+    row.querySelector(".xbtn").onclick = () => {
+      state.tasks = state.tasks.filter(x => x.id !== t.id);
+      recordHistory(); save(); renderAll();
+    };
+    list.appendChild(row);
+  });
+}
+
+/* ─────────── render: hábitos ─────────── */
+function renderHabits() {
+  const list = $("habitList");
+  list.innerHTML = "";
+  state.habits.forEach(h => {
+    const doneToday = h.lastDone === todayISO();
+    const row = document.createElement("div");
+    row.className = "habit";
+    row.innerHTML = `
+      <button class="hbtn ${doneToday ? "done" : ""}" aria-label="Marcar hábito">${doneToday ? "✓" : h.emoji}</button>
+      <span class="name">${esc(h.name)}</span>
+      <span class="streak">${h.streak > 0 ? "🔥 " + h.streak + "d" : "—"}</span>
+      <button class="xbtn" aria-label="Eliminar hábito">✕</button>`;
+    row.querySelector(".hbtn").onclick = () => {
+      const today = todayISO();
+      if (h.lastDone === today) {
+        h.lastDone = null; h.streak = Math.max(0, h.streak - 1);
+      } else {
+        const yest = new Date(Date.now() - 864e5).toISOString().slice(0, 10);
+        h.streak = h.lastDone === yest ? h.streak + 1 : 1;
+        h.lastDone = today;
+      }
+      save(); renderHabits();
+    };
+    row.querySelector(".xbtn").onclick = () => {
+      state.habits = state.habits.filter(x => x.id !== h.id);
+      save(); renderHabits();
+    };
+    list.appendChild(row);
+  });
+}
+
+/* ─────────── render: semana ─────────── */
+function renderWeek() {
+  const now = new Date();
+  const monday = new Date(now);
+  monday.setDate(now.getDate() - ((now.getDay() + 6) % 7));
+  const bar = $("weekbar");
+  bar.innerHTML = "";
+  const vals = [];
+  WEEK_DAYS.forEach((label, i) => {
+    const d = new Date(monday);
+    d.setDate(monday.getDate() + i);
+    const iso = d.toISOString().slice(0, 10);
+    const rec = state.history[iso];
+    const pct = rec && rec.total > 0 ? rec.done / rec.total : null;
+    if (pct !== null) vals.push(pct);
+    const col = document.createElement("div");
+    col.className = "wcol";
+    col.innerHTML = `
+      <div class="wfill ${pct === null ? "empty" : ""} ${iso === todayISO() ? "today" : ""}"
+           style="height:${pct === null ? 8 : Math.max(8, pct * 100)}%"></div>
+      <span class="wlabel">${label}</span>`;
+    bar.appendChild(col);
+  });
+  $("weekPct").textContent = vals.length
+    ? Math.round(vals.reduce((a, b) => a + b, 0) / vals.length * 100)
+    : 0;
+}
+
+/* ─────────── render: victorias ─────────── */
+function renderWins() {
+  const list = $("winList");
+  list.innerHTML = state.wins.length
+    ? state.wins.slice(0, 6).map(w => `<div class="win"><span>✨</span><span>${esc(w.text)}</span></div>`).join("")
+    : `<p class="empty">Aquí irán apareciendo tus logros ✨</p>`;
+}
+
+/* ─────────── render: chat ─────────── */
+function renderChat() {
+  const win = $("chatwin");
+  let html = "";
+  if (chat.length === 0) {
+    html += `<div class="bubble luna">Hola Helen 🤍 soy Luna. Puedes contarme cómo te sientes, en qué estás trabada, o pedirme que te enseñe algo. Sin prisa, sin juicios. ¿Por dónde empezamos?</div>`;
+  }
+  html += chat.map(m => `<div class="bubble ${m.role === "user" ? "helen" : "luna"}">${esc(m.text)}</div>`).join("");
+  if (thinking) html += `<div class="typing">Luna está escribiendo… 🌙</div>`;
+  win.innerHTML = html;
+  win.scrollTop = win.scrollHeight;
+  $("quickReplies").classList.toggle("hidden", chat.length > 0);
+}
+
+/* ─────────── render: reflexiones pasadas ─────────── */
+function renderReflections() {
+  const card = $("pastReflCard");
+  card.classList.toggle("hidden", state.reflections.length === 0);
+  $("pastReflList").innerHTML = state.reflections.slice(0, 5).map(r => `
+    <div class="pastrefl">
+      <b>${r.date}</b>
+      ${r.logre ? `<div>✅ ${esc(r.logre)}</div>` : ""}
+      ${r.aprendi ? `<div>💡 ${esc(r.aprendi)}</div>` : ""}
+      ${r.mejorar ? `<div>🌱 ${esc(r.mejorar)}</div>` : ""}
+    </div>`).join("");
+}
+
+function renderAll() {
+  renderTasks(); renderHabits(); renderWeek(); renderWins(); renderChat(); renderReflections();
+}
+
+/* ─────────── chat: enviar ─────────── */
+async function sendMessage(text) {
+  text = (text ?? $("chatInput").value).trim();
+  if (!text || thinking) return;
+  $("chatInput").value = "";
+  chat.push({ role: "user", text });
+  setThinking(true); renderChat();
+  try {
+    const reply = await askLuna(chat);
+    chat.push({ role: "assistant", text: reply });
+  } catch (e) {
+    chat.push({ role: "assistant", text: "Mmm, tuve un problemita de conexión 🌙 ¿me lo repites en un momento? Aquí sigo contigo." });
+  }
+  save(); setThinking(false); renderChat();
+}
+
+/* ─────────── reflexión ─────────── */
+async function saveReflection() {
+  const refl = {
+    logre: $("reflLogre").value.trim(),
+    aprendi: $("reflAprendi").value.trim(),
+    mejorar: $("reflMejorar").value.trim(),
+  };
+  if (!refl.logre && !refl.aprendi && !refl.mejorar) return;
+  setThinking(true);
+  let lunaNote = "";
+  try {
+    const prompt = `Helen terminó su día y escribió su reflexión nocturna:
+- ¿Qué logré hoy?: ${refl.logre || "(no escribió)"}
+- ¿Qué aprendí?: ${refl.aprendi || "(no escribió)"}
+- ¿Qué puedo mejorar mañana?: ${refl.mejorar || "(no escribió)"}
+Respóndele con un mensaje breve (3-5 frases), cálido y motivador para cerrar el día. Reconoce algo concreto de lo que escribió.`;
+    lunaNote = await askLuna([{ role: "user", text: prompt }]);
+  } catch {
+    lunaNote = "Descansa tranquila, Helen. Hoy también avanzaste, aunque no lo parezca 🌙";
+  }
+  state.reflections.unshift({ date: todayISO(), ...refl, lunaNote });
+  state.reflections = state.reflections.slice(0, 14);
+  save();
+  $("reflLogre").value = $("reflAprendi").value = $("reflMejorar").value = "";
+  const note = $("reflNote");
+  note.textContent = "🌙 " + lunaNote;
+  note.classList.remove("hidden");
+  setThinking(false);
+  renderReflections();
+}
+
+/* ─────────── eventos ─────────── */
+$("greeting").textContent = greeting();
+$("goal").value = state.goal;
+$("goal").oninput = (e) => { state.goal = e.target.value; save(); };
+
+$("btnAddTask").onclick = addTask;
+$("newTask").onkeydown = (e) => { if (e.key === "Enter") addTask(); };
+function addTask() {
+  const text = $("newTask").value.trim();
+  if (!text || state.tasks.length >= 6) return;
+  state.tasks.push({ id: "t" + Date.now(), text, done: false });
+  $("newTask").value = "";
+  recordHistory(); save(); renderAll();
+}
+
+$("btnAddHabit").onclick = addHabit;
+$("newHabit").onkeydown = (e) => { if (e.key === "Enter") addHabit(); };
+function addHabit() {
+  const name = $("newHabit").value.trim();
+  if (!name) return;
+  state.habits.push({ id: "h" + Date.now(), emoji: "🌱", name, streak: 0, lastDone: null });
+  $("newHabit").value = "";
+  save(); renderHabits();
+}
+
+$("btnSend").onclick = () => sendMessage();
+$("chatInput").onkeydown = (e) => {
+  if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+};
+
+document.querySelectorAll(".chip").forEach(chip => {
+  chip.onclick = () => {
+    document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+    chip.classList.add("active");
+    mode = chip.dataset.mode;
+    $("modeHint").textContent = mode === "profesora"
+      ? "Pídele a Luna que te enseñe algo, paso a paso."
+      : "Cuéntale a Luna cómo estás o en qué estás trabada.";
+  };
+});
+
+document.querySelectorAll("#quickReplies button").forEach(b => {
+  b.onclick = () => {
+    let q = b.dataset.q;
+    if (q.includes("|")) {
+      const [m, text] = q.split("|");
+      document.querySelector(`.chip[data-mode="${m}"]`).click();
+      q = text;
+    }
+    sendMessage(q);
+  };
+});
+
+$("btnCheckin").onclick = () => {
+  switchTab("luna");
+  document.querySelector('.chip[data-mode="acompanar"]').click();
+  sendMessage("Hola Luna, quiero hacer mi check-in de la mañana. Pregúntame cómo me siento y ayúdame a elegir mis prioridades de hoy.");
+};
+
+$("btnRefl").onclick = saveReflection;
+
+document.querySelectorAll(".tabs button").forEach(b => {
+  b.onclick = () => switchTab(b.dataset.tab);
+});
+function switchTab(tab) {
+  document.querySelectorAll(".tabs button").forEach(b => b.classList.toggle("active", b.dataset.tab === tab));
+  ["hoy", "luna", "reflexion"].forEach(t => $("tab-" + t).classList.toggle("hidden", t !== tab));
+  if (tab === "luna") renderChat();
+}
+
+renderAll();
+</script>
+</body>
+</html>
