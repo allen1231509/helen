@@ -9,7 +9,7 @@ const path = require("path");
 const app = express();
 const PORT = process.env.PORT || 3000;
 const API_KEY = process.env.GEMINI_API_KEY;
-const MODEL = "gemini-2.0-flash";
+const MODEL = "gemini-2.5-flash-lite";
 const MAX_TOKENS = 1000;
 
 if (!API_KEY) {
